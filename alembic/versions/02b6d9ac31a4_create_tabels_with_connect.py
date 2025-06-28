@@ -1,8 +1,8 @@
-"""first create tables
+"""create tabels with connect
 
-Revision ID: 950cfd2b2ae2
+Revision ID: 02b6d9ac31a4
 Revises: 
-Create Date: 2025-06-27 18:57:09.273400
+Create Date: 2025-06-28 17:59:32.719721
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '950cfd2b2ae2'
+revision: str = '02b6d9ac31a4'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -40,8 +40,10 @@ def upgrade() -> None:
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('created_by', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('orders',
@@ -51,10 +53,12 @@ def upgrade() -> None:
     sa.Column('amount', sa.Integer(), nullable=False),
     sa.Column('status', sa.String(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.CheckConstraint("status IN('pending', 'in progress', 'done', 'cancelled')", name='check_status'),
     sa.ForeignKeyConstraint(['client_id'], ['clients.id'], ),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('notes',
@@ -63,10 +67,12 @@ def upgrade() -> None:
     sa.Column('author_id', sa.Integer(), nullable=True),
     sa.Column('text', sa.String(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['author_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['client_id'], ['clients.id'], ),
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from ..base import Base
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import func
@@ -5,7 +6,12 @@ from typing import Optional
 from sqlalchemy import ForeignKey
 from datetime import datetime
 
-class Note(Base):
+from .mixins import UserRelationMixin
+
+if TYPE_CHECKING:
+    from .user import User
+
+class Note(UserRelationMixin, Base):
     __tablename__ = "notes"
 
     client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), nullable=True)
@@ -14,5 +20,5 @@ class Note(Base):
     text: Mapped[str] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(default=func.current_timestamp())
 
-
+    _user_back_populaties = "notes"
 

@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 from ..base import Base
 from typing import Optional
 from sqlalchemy import ForeignKey, CheckConstraint, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
+
+if TYPE_CHECKING:
+    from .user import User
 
 class Order(Base):
     __tablename__ = "orders"
@@ -14,6 +18,10 @@ class Order(Base):
     status: Mapped[str] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(default=func.current_timestamp())
     # updated_at: Mapped[datetime] = mapped_column(default_factory=datetime.utcnow, onupdate=datetime.utcno)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+
+    user: Mapped["User"] = relationship('User', back_populates='orders')
 
     __table_args__ = (
     CheckConstraint("status IN('pending', 'in progress', 'done', 'cancelled')", name="check_status"),
