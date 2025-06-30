@@ -20,11 +20,9 @@ class Order(Base):
     created_at: Mapped[datetime] = mapped_column(default=func.current_timestamp())
     # updated_at: Mapped[datetime] = mapped_column(default_factory=datetime.utcnow, onupdate=datetime.utcno)
 
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    user: Mapped["User"] = relationship('User', back_populates='orders')
+    user: Mapped["User"] = relationship('User', back_populates='orders', foreign_keys=[created_by])
 
-    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"))
-    clint: Mapped["Client"] = relationship('Client', back_populates='orders')
+    client: Mapped["Client"] = relationship('Client', back_populates='orders', foreign_keys=[client_id])
 
     __table_args__ = (
     CheckConstraint("status IN('pending', 'in progress', 'done', 'cancelled')", name="check_status"),

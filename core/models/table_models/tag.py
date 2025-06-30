@@ -14,3 +14,9 @@ class Tag(Base):
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
 
     clients_details: Mapped[list["ClientTagAssociation"]] = relationship(back_populates='tag')
+
+    def __str__(self):
+        return f"{self.__class__.__name__}(id={self.id}, name={self.name!r})" # это для отладки
+    
+    def __repr__(self):
+        return str(self)

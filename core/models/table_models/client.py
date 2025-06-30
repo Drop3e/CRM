@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from .order import Order
     from .note import Note
 
-class Client(UserRelationMixin, Base):
+class Client(Base):
     __tablename__ = "clients"
 
     name: Mapped[str] = mapped_column(nullable=False)
@@ -23,8 +23,9 @@ class Client(UserRelationMixin, Base):
     created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     created_at: Mapped[datetime] = mapped_column(default=func.current_timestamp())
 
-    _user_back_populaties = "clients"
     tags_details: Mapped[list["ClientTagAssociation"]] = relationship(back_populates="client")
+
+    user: Mapped["User"] = relationship("User", back_populates="clients", foreign_keys=[created_by])
 
     orders: Mapped[list["Order"]] = relationship('Order', back_populates='client')
     notes: Mapped[list["Note"]] = relationship('Note', back_populates='client')

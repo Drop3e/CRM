@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from .user import User
     from .client import Client
 
-class Note(UserRelationMixin, Base):
+class Note(Base):
     __tablename__ = "notes"
 
     client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), nullable=False)
@@ -21,6 +21,8 @@ class Note(UserRelationMixin, Base):
     text: Mapped[str] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(default=func.current_timestamp())
 
-    _user_back_populaties = "notes"
 
-    client: Mapped["Client"] = relationship("Client", back_populates="notes")
+    user: Mapped["User"] = relationship("User", back_populates="notes", foreign_keys=[author_id])
+
+    client: Mapped["Client"] = relationship("Client", back_populates="notes", foreign_keys=[client_id])
+

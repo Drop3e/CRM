@@ -18,4 +18,5 @@ class UserRelationMixin:
     
     @declared_attr
     def user(cls) -> Mapped["User"]:
-        return relationship("User", back_populates=cls._user_back_populaties)
+        return relationship("User", back_populates=cls._user_back_populaties, foreign_keys=[user_id]) # type: ignore
+    
