@@ -8,6 +8,8 @@ if TYPE_CHECKING:
     from .tag import Tag
 
 class ClientTagAssociation(Base):
+    __tablename__ = "client_tag_associations"
+    __table_args__ = (UniqueConstraint("tag_id", "client_id", name="idx_unique_tag_client"),)
     id: Mapped[int] = mapped_column(primary_key=True)
     
     tag_id: Mapped[int] = mapped_column(ForeignKey("tags.id"))
